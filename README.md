@@ -5,8 +5,8 @@ This repository will help you setup a zencash node with a single bash script.
 The script will install Docker on a fresh Ubuntu VM and provision the following
 containers:
 
-- zend https://hub.docker.com/r/whenlambomoon/zend/
-- Securenodetracker https://hub.docker.com/r/whenlambomoon/secnodetracker/
+- zend https://hub.docker.com/r/nothsa/zend/
+- Securenodetracker https://hub.docker.com/r/nothsa/secnodetracker/
 - neilpang/acme.sh https://hub.docker.com/r/neilpang/acme.sh
 
 acme.sh will run as a docker container and auto-renew your SSL certificates when required.
@@ -25,10 +25,10 @@ acme.sh will be used to provision and maintain a valid SSL certificate for your 
 Invoking the script is best done on a fresh installation, however executing install script again should not
 cause any issues.
 
-*Note:* Check the [ansible installer](https://github.com/WhenLamboMoon/docker-zen-node/tree/master/ansible) if you plan on installing multiple nodes
+*Note:* Check the [ansible installer](https://github.com/nothsa/docker-zen-node/tree/master/ansible) if you plan on installing multiple nodes
 
 ```
-curl -O https://raw.githubusercontent.com/WhenLamboMoon/docker-zen-node/master/install.sh
+curl -O https://raw.githubusercontent.com/nothsa/docker-zen-node/master/install.sh
 chmod +x install.sh
 ./install.sh <stakeaddr> <email> <fqdn> <region>
 ```
@@ -159,7 +159,7 @@ To resolve this you will need to reindex your zen-node. To do this you will need
 
 ```
 systemctl stop zen-node
-docker run --rm --net=host -p 9033:9033 -p 18231:18231 -v /mnt/zen:/mnt/zen --name zen-node whenlambomoon/zend:latest zend -reindex
+docker run --rm --net=host -p 9033:9033 -p 18231:18231 -v /mnt/zen:/mnt/zen --name zen-node nothsa/zend:latest zend -reindex
 ```
 
 Once it finishes reindexing you can exit and restart the zen-node normally:
