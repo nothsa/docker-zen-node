@@ -51,7 +51,8 @@ print_status "Populating apt-get cache..."
 apt-get update
 
 print_status "Installing packages required for setup..."
-apt-get install -y docker.io apt-transport-https lsb-release curl fail2ban unattended-upgrades ufw > /dev/null 2>&1
+#apt-get install -y docker.io apt-transport-https lsb-release curl fail2ban unattended-upgrades ufw > /dev/null 2>&1
+apt-get install -y docker-ce apt-transport-https lsb-release curl fail2ban unattended-upgrades netfilter-persistent > /dev/null 2>&1
 
 systemctl enable docker
 systemctl start docker
@@ -145,8 +146,8 @@ Restart=always
 ExecStartPre=-/usr/bin/docker stop zen-node
 ExecStartPre=-/usr/bin/docker rm  zen-node
 # Always pull the latest docker image
-ExecStartPre=/usr/bin/docker pull whenlambomoon/zend:latest
-ExecStart=/usr/bin/docker run --rm --net=host -p 9033:9033 -p 18231:18231 -v /mnt/zen:/mnt/zen --name zen-node whenlambomoon/zend:latest
+ExecStartPre=/usr/bin/docker pull nothsa/zend:latest
+ExecStart=/usr/bin/docker run --rm --net=host -p 9033:9033 -p 18231:18231 -v /mnt/zen:/mnt/zen --name zen-node nothsa/zend:latest
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -164,9 +165,9 @@ Restart=always
 ExecStartPre=-/usr/bin/docker stop zen-secnodetracker
 ExecStartPre=-/usr/bin/docker rm  zen-secnodetracker
 # Always pull the latest docker image
-ExecStartPre=/usr/bin/docker pull whenlambomoon/secnodetracker:latest
-#ExecStart=/usr/bin/docker run --init --rm --net=host -v /mnt/zen:/mnt/zen --name zen-secnodetracker whenlambomoon/secnodetracker:latest
-ExecStart=/usr/bin/docker run --rm --net=host -v /mnt/zen:/mnt/zen --name zen-secnodetracker whenlambomoon/secnodetracker:latest
+ExecStartPre=/usr/bin/docker pull nothsa/secnodetracker:latest
+#ExecStart=/usr/bin/docker run --init --rm --net=host -v /mnt/zen:/mnt/zen --name zen-secnodetracker nothsa/secnodetracker:latest
+ExecStart=/usr/bin/docker run --rm --net=host -v /mnt/zen:/mnt/zen --name zen-secnodetracker nothsa/secnodetracker:latest
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -180,15 +181,16 @@ systemctl enable zen-secnodetracker
 systemctl restart zen-secnodetracker
 
 print_status "Enabling basic firewall services..."
-ufw default allow outgoing
-ufw default deny incoming
-ufw allow ssh/tcp
-ufw limit ssh/tcp
-ufw allow http/tcp
-ufw allow https/tcp
-ufw allow 9033/tcp
-#ufw allow 19033/tcp
-ufw --force enable
+#ufw default allow outgoing
+#ufw default deny incoming
+#ufw allow ssh/tcp
+#ufw limit ssh/tcp
+#ufw allow http/tcp
+#ufw allow https/tcp
+#ufw allow 9033/tcp
+##ufw allow 19033/tcp
+#ufw --force enable
+netfilter-persistent reload
 
 print_status "Enabling fail2ban services..."
 systemctl enable fail2ban
